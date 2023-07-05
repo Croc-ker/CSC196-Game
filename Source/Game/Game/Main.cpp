@@ -13,45 +13,22 @@ using namespace std;
 //	int* p = new int[1000000];
 //}
 
-int main()
+int main(int argc, char* argv[])
 {
-	kiko::g_memoryTracker.DisplayInfo();
-	int* p = new int;
-	kiko::g_memoryTracker.DisplayInfo();
-	delete p;
-	kiko::g_memoryTracker.DisplayInfo();
+	kiko::Renderer renderer;
+	renderer.Initialize();
+	renderer.CreateWindow("CSC196-Game",800,600);
 
+	while (true) {
+		renderer.SetColor(0, 0, 0, 255);
+		renderer.BeginFrame();
+		//draw
+		for (int i = 0; i < 9999; i++) {
+			renderer.SetColor(kiko::random(256), kiko::random(256), kiko::random(256), 255);
+			renderer.DrawLine(kiko::random(renderer.GetWidth()), kiko::random(renderer.GetHeight()), kiko::random(renderer.GetWidth()), kiko::random(renderer.GetHeight()));
+		}
+		renderer.EndFrame();
+	}
 
-	kiko::Time timer;
-	for (int i = 0; i < 100000; i++) {}
-	cout << timer.GetElapsedNanoseconds() << endl;
-
-	/*uto start = std::chrono::high_resolution_clock::now();
-	for (int i = 0; i < 100000; i++) {}
-	auto end = std::chrono::high_resolution_clock::now();
-	cout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();*/
-
-	//for (int i = 0; i < 10; i++) {
-	//	int* p = new int;
-	//}
-
-	//while (true) {
-	//	func();
-	//}
-
-	//cout << kiko::getFilePath() << endl;
-	//kiko::setFilePath("Assets");
-	//cout << kiko::getFilePath() << endl;
-	//size_t size;
-	//kiko::getFileSize("game.txt", size);
-	//cout << size << endl;
-
-	//std::string s;
-	//kiko::readFile("game.txt", s);
-	//cout << s << endl;
-
-	//kiko::seedRandom((unsigned int)time(nullptr));
-	//for (int i = 0; i < 10; i++) {
-	//	cout << kiko::random(10, 20) << endl;
-	//}
+	return 0;
 }
