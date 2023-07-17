@@ -1,8 +1,8 @@
 #include "Renderer.h"
 namespace kiko
 {
-	SDL_Renderer* renderer{ nullptr };
-	SDL_Window* window{ nullptr };
+
+	Renderer g_Renderer;
 
 	bool Renderer::Initialize()
 	{
@@ -46,6 +46,7 @@ namespace kiko
 	{
 		SDL_RenderDrawPoint(m_renderer, x, y);
 	}
+
 
 	//float draw
 	void Renderer::DrawLine(float x1, float y1, float x2, float y2)
