@@ -1,11 +1,20 @@
 #include "Actor.h"
+#include "Renderer/Model.h"
 
-void Actor::Update(float dt)
+namespace kiko
 {
-}
-
-void Actor::Draw(kiko::Renderer& renderer)
-{
-	m_model.Draw(renderer, m_transform.position, m_transform.rotation, m_transform.scale);
+    void Actor::Update(float dt)
+    {
+        if (m_lifespan >= 0.0f) {
+            m_lifespan -= dt;
+            if (m_lifespan <= 0.0f) {
+                m_destroyed = true;
+            }
+        }
+    }
+    void Actor::Draw(kiko::Renderer& renderer)
+    {
+        m_model->Draw(renderer, m_transform);
+    }
 
 }

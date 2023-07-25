@@ -1,7 +1,8 @@
 #include <iostream>
 #include "Renderer/Renderer.h"
 #include "Core/Core.h"
-#include "Renderer/Model.h"
+#include "Renderer/Font.h"
+#include "Renderer/ModelManager.h"
 #include "Input/InputSystem.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -9,6 +10,8 @@
 #include <vector>
 #include <thread>
 #include "../../../Audio/AudioSystem.h"
+#include <Framework/Scene.h>
+#include <Renderer/Text.h>
 
 using namespace std;
 
@@ -44,15 +47,10 @@ public:
 
 int main(int argc, char* argv[])
 {
-	auto m1 = kiko::Max(4.0f, 3.0f);
-	auto m2 = kiko::Max(4, 3);
 
-
-	constexpr float a = kiko::DegreesToRadians(180.0f);
-
+	kiko::MemoryTracker::Initialize();
 	kiko::seedRandom((unsigned int)time(nullptr));
 	kiko::setFilePath("assets");
-
 
 	kiko::g_Renderer.Initialize();
 	kiko::g_Renderer.CreateWindow("CSC196", 800, 600);
@@ -63,9 +61,16 @@ int main(int argc, char* argv[])
 	kiko::g_audiosystem.AddAudio("laser", "laser.wav");
 	kiko::g_audiosystem.AddAudio("explode", "explosion.wav");
 
-	//std::vector<kiko::vec2> points{{-10, 5}, { 10,5 }, { 0,-5 }, { -10, 5 }};
-	kiko::Model model;
-	model.Load("ship.txt");
+	kiko::Font fontsystem;
+
+	// create font / text objects
+	std::shared_ptr<kiko::Font> font = std::make_shared<kiko::Font>("Impact Label.ttf", 24);
+
+	std::unique_ptr<kiko::Text> text = std::make_unique<kiko::Text>(font);
+	text->Create(kiko::g_Renderer, "NEUMONT", kiko::Color{ 1, 1, 1, 1 });
+
+	//kiko::Model model;
+	//model.Load("ship.txt");
 
 	kiko::vec2 v{5, 5};
 	v.Normalize();
@@ -78,60 +83,50 @@ int main(int argc, char* argv[])
 		stars.push_back(Star(pos, vel));
 	}
 
-
-
-	kiko::vec2 position{500, 400};
-	kiko::Transform transform{{400, 300}, 0, 3};
-	float speed = 200;
-	constexpr float turnRate = kiko::DegreesToRadians(180);
-
-	Player player{ 400, kiko::Pi, { {800, 500}, 0, 6 }, model };
-
-	std::vector<Enemy> enemies;
-	for (int i = 0; i < 5; i++) {
-		Enemy newEnemy{ 300, kiko::Pi, { {kiko::random(300), kiko::random(300)}, kiko::randomf(kiko::RadiansToDegrees(kiko::TwoPi)), 6}, model};
-		enemies.push_back(newEnemy);
+	//adding entities
+	kiko::Scene scene;;
+	//player
+	unique_ptr<Player> player = make_unique<Player>(200.0f, kiko::Pi, kiko::Transform{ {400, 300}, 0, 6 }, kiko::g_manager.Get("ship.txt"));
+	player->m_tag = "player";
+	scene.Add(std::move(player));
+	//enemies
+	for (int i = 0; i < 1; i++) {
+		unique_ptr<Enemy> enemy = make_unique<Enemy>(kiko::random(50, 150), kiko::Pi, kiko::Transform{ {kiko::random(300), kiko::random(300)}, kiko::randomf(kiko::RadiansToDegrees(kiko::TwoPi)), 6 }, kiko::g_manager.Get("enemy.txt"));
+		enemy->m_tag = "enemy";
+		scene.Add(std::move(enemy));
 	}
-	
-
 
 	//main game loop
 	bool quit = false;
 	while (!quit)
 	{
-		//transform.rotation += 1.0f;
+
+		//Engine Update
 		kiko::g_time.Tick();
 		kiko::g_inputSystem.Update();
 		if (kiko::g_inputSystem.GetKeyDown(SDL_SCANCODE_ESCAPE))
 		{
 			quit = true;
 		}
-		if (kiko::g_inputSystem.GetKeyDown(SDL_SCANCODE_SPACE) && !kiko::g_inputSystem.GetPreviousKeyDown(SDL_SCANCODE_SPACE))
-		{
-			kiko::g_audiosystem.PlayOneShot("explode");
-		} 
+		
 
-		// UPDATE///////////////////////////////////
-		player.Update(kiko::g_time.GetDeltaTime());
-		for (auto& enemy : enemies)enemy.Update(kiko::g_time.GetDeltaTime());
+		// update
+		scene.Update(kiko::g_time.GetDeltaTime());
 
 		kiko::g_Renderer.SetColor(0, 0, 0, 0);
 		kiko::g_Renderer.BeginFrame();
-		//draw
+		
 		kiko::Vector2 vel(1.0f, 0.3f);
 
 		for (auto& star : stars) {
 			star.Update(kiko::g_Renderer.GetWidth(), kiko::g_Renderer.GetHeight());
-			kiko::g_Renderer.SetColor(kiko::random(256), kiko::random(256), kiko::random(256), 255);
+			kiko::g_Renderer.SetColor(255,255,255,255);
 			star.Draw(kiko::g_Renderer);
 		}
 
-		player.Draw(kiko::g_Renderer);
-
-		for (Enemy enemy : enemies) {
-			enemy.Draw(kiko::g_Renderer); 
-		}
-
+		//Draw
+		scene.Draw(kiko::g_Renderer);
+		text->Draw(kiko::g_Renderer, 400, 300);
 
 		kiko::g_Renderer.EndFrame();
 

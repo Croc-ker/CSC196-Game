@@ -1,17 +1,22 @@
 #pragma once
 #include "Framework/Actor.h"
 
-class Player : public Actor
+
+class Player : public kiko::Actor
 {
 public:
-	Player(float speed, float turnRate, const kiko::Transform& transform, const kiko::Model& model) :
+	Player(float speed, float turnRate, const kiko::Transform& transform, std::shared_ptr<kiko::Model> model) :
 		Actor{ transform, model },
 		m_speed{ speed },
-		m_turnRate{ turnRate }
+		m_turnRate{ turnRate },
+		m_health { 3.0f }
 	{}
 	void Update(float dt) override;
+	void OnCollision(Actor* actor) override;
+
 private:
 	float m_speed = 0;
 	float m_turnRate = 0;
+	float m_health = 0;
 };
 
