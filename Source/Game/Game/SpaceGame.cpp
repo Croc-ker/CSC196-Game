@@ -11,6 +11,8 @@
 #include "Framework/Emitter.h"
 #include "Renderer/ParticleSystem.h"
 #include "Core/Random.h"
+#include "Bomb.h"
+
 bool SpaceGame::Initialize()
 {
 	// create font / text objects
@@ -83,12 +85,20 @@ void SpaceGame::Update(float dt)
 			enemy->m_tag = "Enemy";
 			enemy->m_game = this;
 			m_scene->Add(move(enemy));
-			int coinflip = kiko::random(2);
-			if (coinflip == 0) {
+			int diceRoll = kiko::random(20);
+			std::cout << diceRoll << "\n";
+			if (diceRoll <= 15) {
 				std::unique_ptr<WeaponType> weaponPickup = std::make_unique<WeaponType>(kiko::Transform{ {kiko::random(600), kiko::random(600)}, kiko::randomf(kiko::TwoPi), 2.0f }, kiko::g_manager.Get("pickup.txt"));
 				weaponPickup->m_game = this;
 				weaponPickup->SetRandomType();
 				m_scene->Add(move(weaponPickup));
+			}
+			else {
+				std::unique_ptr<Bomb> bombPickup = std::make_unique<Bomb>(kiko::Transform{ {kiko::random(100,701), kiko::random(100,501)}, kiko::randomf(kiko::TwoPi), 1.0f }, kiko::g_manager.Get("bomb.txt"));
+				bombPickup->m_game = this;
+				bombPickup->m_tag = "BombPickup";
+				bombPickup->SetLifespan(5.0f);
+				m_scene->Add(move(bombPickup));
 			}
 		}
 

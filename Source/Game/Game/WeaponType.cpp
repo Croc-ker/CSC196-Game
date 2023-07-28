@@ -39,7 +39,6 @@ void WeaponType::GiveBigShot(Actor* player) {
 void WeaponType::SetRandomType()
 {
     int randnum = kiko::random(0,2);
-    std::cout << randnum << std::endl;
     WeaponType::Type tempType;
     switch (randnum)
     {

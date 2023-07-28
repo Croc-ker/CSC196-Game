@@ -42,12 +42,13 @@ void Enemy::Update(float dt)
 
 		m_fireTimer = m_fireTime;
 	}
+
 }
 
 void Enemy::OnCollision(Actor* other)
 {
 	if (other->m_tag == "PlayerBullet") {
-		m_health -= 20;
+		m_health -= 25;
 		if (m_health <= 0) {
 			m_destroyed = true;
 			m_game->AddPoints(100);
@@ -66,8 +67,33 @@ void Enemy::OnCollision(Actor* other)
 			kiko::Transform transform{ { m_transform.position.x, m_transform.position.y }, 0, 1 };
 			auto emitter = std::make_unique<kiko::Emitter>(transform, data);
 			emitter->SetLifespan(1.0f);
-			m_scene->Add(std::move(emitter));	
+			m_scene->Add(std::move(emitter));
 			kiko::g_AudioSystem.PlayOneShot("explode");
 		}
 	}
+	else if (other->m_tag == "BombActive" || other->m_tag == "BombHit") {
+		m_health -= 50;
+		if (m_health <= 0) {
+			m_destroyed = true;
+			m_game->AddPoints(100);
+			kiko::EmitterData data;
+			data.burst = true;
+			data.burstCount = 20;
+			data.spawnRate = 10;
+			data.angle = 0;
+			data.angleRange = kiko::Pi;
+			data.lifetimeMin = 0.5f;
+			data.lifetimeMax = 1.5f;
+			data.speedMin = 50;
+			data.speedMax = 250;
+			data.damping = 0.5f;
+			data.color = kiko::Color{ 1, 1, 0, 1 };
+			kiko::Transform transform{ { m_transform.position.x, m_transform.position.y }, 0, 1 };
+			auto emitter = std::make_unique<kiko::Emitter>(transform, data);
+			emitter->SetLifespan(1.0f);
+			m_scene->Add(std::move(emitter));
+			kiko::g_AudioSystem.PlayOneShot("explode");
+		}
+	}
+	
 }
