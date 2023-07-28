@@ -91,6 +91,7 @@ void SpaceGame::Update(float dt)
 				std::unique_ptr<WeaponType> weaponPickup = std::make_unique<WeaponType>(kiko::Transform{ {kiko::random(600), kiko::random(600)}, kiko::randomf(kiko::TwoPi), 2.0f }, kiko::g_manager.Get("pickup.txt"));
 				weaponPickup->m_game = this;
 				weaponPickup->SetRandomType();
+				weaponPickup->SetLifespan(5.0f);
 				m_scene->Add(move(weaponPickup));
 			}
 			else {

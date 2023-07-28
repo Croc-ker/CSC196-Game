@@ -1,4 +1,5 @@
 #include "Bomb.h"
+#include "../../Audio/AudioSystem.h"
 
 void Bomb::Update(float dt)
 {
@@ -7,6 +8,7 @@ void Bomb::Update(float dt)
 		m_tag = "BombHit";
 		m_lifespan = 2.0f;
 		m_transform.scale *= 75.0f;
+		kiko::g_AudioSystem.PlayOneShot("death");
 	}
 }
 
