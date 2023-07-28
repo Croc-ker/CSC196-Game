@@ -1,8 +1,7 @@
 #include "AudioSystem.h"
 namespace kiko
 {
-
-	AudioSystem g_audiosystem;
+	AudioSystem g_AudioSystem;
 
 	bool AudioSystem::Initialize()
 	{
@@ -27,17 +26,19 @@ namespace kiko
 		if (m_sounds.find(name) == m_sounds.end())
 		{
 			FMOD::Sound* sound = nullptr;
-			m_fmodSystem -> createSound(filename.c_str(), FMOD_DEFAULT, 0, &sound);
+			m_fmodSystem->createSound(filename.c_str(), FMOD_DEFAULT, 0, &sound);
 			m_sounds[name] = sound;
 		}
+
 	}
-	void AudioSystem::PlayOneShot(const std::string& name)
+	void AudioSystem::PlayOneShot(const std::string& name, bool loop)
 	{
 		auto iter = m_sounds.find(name);
 		if (iter != m_sounds.end())
 		{
 			FMOD::Sound* sound = iter->second;
-			sound->setMode(FMOD_LOOP_OFF);
+			sound->setMode(loop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF);
+
 			FMOD::Channel* channel;
 			m_fmodSystem->playSound(sound, 0, false, &channel);
 		}

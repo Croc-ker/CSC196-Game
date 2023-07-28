@@ -1,5 +1,6 @@
 #include "Time.h"
 #include "MathUtils.h"
+
 namespace kiko
 {
 	Time g_time;
@@ -14,7 +15,6 @@ namespace kiko
 		m_deltaTime = Min(m_deltaTime, 0.25f);
 
 		m_frameTime = clock::now();
-
 	}
 	Time::clock_rep Time::GetElapsedNanoseconds()
 	{

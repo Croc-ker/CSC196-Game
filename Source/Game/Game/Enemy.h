@@ -1,6 +1,7 @@
 #pragma once
 #include "Framework/Actor.h"
 
+
 class Enemy : public kiko::Actor
 {
 public:
@@ -9,17 +10,23 @@ public:
 		m_speed{ speed },
 		m_turnRate{ turnRate }
 	{
-		m_fireRate = 2.0f;
-		m_fireTimer = m_fireRate;
+		m_fireTime = 3.0f;
+		m_fireTimer = m_fireTime;
 	}
-	void Update(float dt) override;
-	void OnCollision(Actor* actor) override;
 
+	void Update(float dt) override;
+	void OnCollision(Actor* other) override;
+
+	bool GetFaceingPlayer() const { return m_faceingPlayer; }
+	void SetFaceingPlayer(bool faceingPlayer) { m_faceingPlayer = faceingPlayer; }
 private:
 	float m_speed = 0;
 	float m_turnRate = 0;
 
-	float m_fireRate = 0;
-	float m_fireTimer = 0;
-};
+	bool m_faceingPlayer;
 
+	float m_fireTime = 0;
+	float m_fireTimer = 0;
+
+	int m_health = 50;
+};

@@ -157,7 +157,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="FileIO.h" />
     <ClInclude Include="MathUtils.h" />
-    <ClInclude Include="Memory.h" />
+    <ClInclude Include="memory.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
@@ -165,7 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileIO.cpp" />
-    <ClCompile Include="Memory.cpp" />
+    <ClCompile Include="memory.cpp" />
     <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -4,8 +4,6 @@
 #include <map>
 #include <memory>
 
-
-
 namespace kiko
 {
 	class ModelManager

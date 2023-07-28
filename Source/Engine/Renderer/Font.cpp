@@ -1,5 +1,6 @@
 #include "Font.h"
 #include <SDL2-2.28.0/include/SDL_ttf.h>
+
 namespace kiko
 {
 	Font::Font(const std::string& filename, int fontSize)
@@ -8,7 +9,9 @@ namespace kiko
 	}
 	Font::~Font()
 	{
-		if(m_ttfFont) TTF_CloseFont;
+		if (m_ttfFont) {
+			TTF_CloseFont(m_ttfFont);
+		}
 	}
 	void Font::Load(const std::string& filename, int fontSize)
 	{

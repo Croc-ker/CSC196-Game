@@ -1,10 +1,10 @@
 #pragma once
 #include <list>
 #include "Actor.h"
-namespace kiko
-{
 
+namespace kiko {
 	class Renderer;
+
 
 	class Scene
 	{
@@ -12,7 +12,7 @@ namespace kiko
 		Scene() = default;
 
 		void Update(float dt);
-		void Draw(Renderer& renderer);
+		void Draw(Renderer& Renderer);
 
 		void Add(std::unique_ptr<Actor> actor);
 		void RemoveAll();
@@ -20,24 +20,22 @@ namespace kiko
 		template<typename T>
 		T* GetActor();
 
-
-		friend class Actor;
-
+		friend class Scene;
 	private:
 		std::list<std::unique_ptr<Actor>> m_actors;
 	};
 
-
 	template<typename T>
-	T* Scene::GetActor()
+	inline T* Scene::GetActor()
 	{
-		for (const auto& actor : m_actors)
+		for (auto& actor : m_actors)
 		{
-			if (typeid(*actor) == typeid(T))
-			{
-				return static_cast<T*>(actor.get());
-			}
+			T* result = dynamic_cast<T*>(actor.get());
+			if (result) return result;
 		}
+
+
 		return nullptr;
+
 	}
 }

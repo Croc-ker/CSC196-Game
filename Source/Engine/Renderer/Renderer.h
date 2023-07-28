@@ -1,13 +1,13 @@
 #pragma once
 #include <string>
 #include <SDL2-2.28.0/include/SDL.h>
+
 namespace kiko
 {
 
 	class Renderer
 	{
-
-		
+		friend class Text;
 	public:
 		Renderer() = default;
 		~Renderer() = default;
@@ -30,7 +30,6 @@ namespace kiko
 		int GetWidth() const { return m_width; }
 		int GetHeight() const { return m_height; }
 
-		friend class Text;
 	private:
 		int m_width = 0;
 		int m_height = 0;
